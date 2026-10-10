@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add('js');</script>
+  <title>KESTREL | Ride it, open it up, learn it</title>
+  <meta name="description" content="KESTREL, a made-up motorcycle brand: spin and rev a 3D bike, see how its parts work, browse the lineup, ride through the history.">
+  <meta name="theme-color" content="#e9e5dc">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Lets js/bike3d.js import Three.js by name, also when the page is opened as a local file -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Intro: a tachometer revs to the redline, then the page drops in -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <svg class="tach" viewBox="0 0 200 124">
+      <path class="tach-arc" d="M20 110 A80 80 0 0 1 180 110"/>
+      <path class="tach-red" d="M157 53 A80 80 0 0 1 180 110"/>
+      <line class="tach-needle" id="tach-needle" x1="100" y1="110" x2="100" y2="42"/>
+      <circle cx="100" cy="110" r="6" fill="#ff6b1a"/>
+    </svg>
+    <p class="loader-rpm"><span id="loader-rpm">0</span><small>x1000 rpm</small></p>
+  </div>
+
+  <div class="cursor" id="cursor" aria-hidden="true">
+    <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="15" fill="none" stroke="currentColor" stroke-width="5"/><path d="M20 8v24M9.6 14l20.8 12M9.6 26l20.8-12" stroke="currentColor" stroke-width="2"/></svg>
+  </div>
+
+  <div class="progress" aria-hidden="true">
+    <div class="progress-fill" id="progress-fill"></div>
+    <div class="progress-rider" id="progress-rider"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="#ride" class="wordmark tape" aria-label="KESTREL, back to top" translate="no">KESTREL<span>moto garage</span></a>
+      <nav id="site-nav" class="site-nav" aria-label="Main">
+        <a href="#ride">Ride</a>
+        <a href="#lift">Lift</a>
+        <a href="#workbench">Workbench</a>
+        <a href="#lineup">Lineup</a>
+        <a href="#service">Service</a>
+        <a href="#heritage">Heritage</a>
+        <a href="#garage">Garage</a>
+        <a href="#crew">Crew</a>
+      </nav>
+      <div class="nav-actions">
+        <button type="button" class="sound-toggle" id="sound-toggle" aria-pressed="false">
+          <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="sound-label">Sound off</span>
+        </button>
+        <button type="button" class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Workshop backdrop: light shafts, a roller-door light band, dust motes and tyre tracks -->
+  <div class="workshop-bg" aria-hidden="true">
+    <i class="shaft"></i><i class="shaft"></i><i class="shaft"></i>
+    <div class="door-light" id="door-light"></div>
+    <canvas class="dust" id="dust"></canvas>
+    <div class="tyre-track" id="tyre-track"></div>
+  </div>
+
+  <main id="main">
+    <!-- BAY: one sticky 3D view shared by the hero and the lift tour -->
+    <div class="bay">
+    <div class="bay-view">
+      <div class="stage" id="bike-stage" role="img" aria-label="3D KESTREL K6 sport bike. Drag to spin it, hold the throttle button to rev, click the bike for a wheelie. Switch to Explore to learn its parts, or Ride to drive it."></div>
+      <div class="hotspots" id="hotspots" hidden></div>
+    </div>
+
+    <!-- HERO: interactive 3D bike -->
+    <section id="ride" class="hero" data-mode="showroom">
+
+      <div class="container hero-copy">
+        <h1 class="hero-title" id="hero-title">Twist it. Learn it.</h1>
+        <p class="hero-sub" id="hero-sub">KESTREL K6. Drag to spin it, hold the throttle to rev, click it for a wheelie.</p>
+        <p class="model-status" id="model-status" aria-live="polite"></p>
+      </div>
+
+      <div class="container modes-wrap">
+        <div class="modes" role="group" aria-label="View mode">
+          <button type="button" class="mode" data-mode="showroom" aria-pressed="true">Showroom</button>
+          <button type="button" class="mode" data-mode="explore" aria-pressed="false">Explore</button>
+          <button type="button" class="mode" data-mode="ride" aria-pressed="false">Ride</button>
+        </div>
+      </div>
+
+      <!-- EXPLORE: parts list, info card, explode and x-ray -->
+      <aside class="panel panel-explore" id="panel-explore" aria-label="Explore the K6" hidden>
+        <div class="panel-tools">
+          <button type="button" class="tool" id="explode-btn" aria-pressed="false">Explode</button>
+          <button type="button" class="tool" id="xray-btn" aria-pressed="false">X-ray</button>
+        </div>
+        <div class="part-card" id="part-card" aria-live="polite">
+          <h2 id="part-name">Pick a part</h2>
+          <p id="part-text">Select a numbered dot, a part of the bike itself, or a name below.</p>
+        </div>
+        <ol class="parts" id="parts-list"></ol>
+      </aside>
+
+      <!-- RIDE: the coach ("pit radio") explains what the bike is doing; text in data.js > rideTips -->
+      <div class="ride-coach" id="ride-coach" aria-live="polite" hidden>
+        <div class="coach-card" id="coach-card">
+          <p class="coach-label"><i aria-hidden="true"></i><span id="coach-label"></span></p>
+          <h2 id="coach-title"></h2>
+          <p id="coach-text"></p>
+          <div class="coach-timer" aria-hidden="true"><i id="coach-timer"></i></div>
+        </div>
+      </div>
+
+      <!-- RIDE: HUD, keyboard + touch controls -->
+      <div class="panel panel-ride" id="panel-ride" hidden>
+        <p class="ride-help"><kbd>W</kbd>/<kbd>&uarr;</kbd> throttle &nbsp; <kbd>S</kbd>/<kbd>&darr;</kbd> brake &nbsp; <kbd>A</kbd><kbd>D</kbd>/<kbd>&larr;</kbd><kbd>&rarr;</kbd> lean &nbsp; <kbd>E</kbd>/<kbd>Q</kbd> shift up/down &nbsp; <kbd>Space</kbd> wheelie &nbsp; <kbd>T</kbd> replay tip</p>
+        <div class="ride-row">
+          <div class="hud">
+            <div class="hud-dial" aria-hidden="true">
+              <svg class="hud-tach" viewBox="0 0 200 124">
+                <path class="tach-arc" d="M20 110 A80 80 0 0 1 180 110"/>
+                <path class="tach-fill" id="tach-fill" pathLength="1" d="M20 110 A80 80 0 0 1 180 110"/>
+                <path class="tach-red" d="M157 53 A80 80 0 0 1 180 110"/>
+                <line class="tach-needle" id="hud-needle" x1="100" y1="62" x2="100" y2="34"/>
+              </svg>
+              <b class="hud-gear" id="hud-gear">N</b>
+            </div>
+            <div class="hud-bars" aria-hidden="true"><span class="hud-bar"><i id="bar-throttle"></i></span><span class="hud-bar is-brake"><i id="bar-brake"></i></span></div>
+            <p class="ride-speed"><b id="ride-speed">0</b> toy km/h</p>
+          </div>
+          <div class="pad" aria-label="Touch controls">
+            <button type="button" class="pad-btn pad-shift" data-shift="-1" aria-label="Shift down">&minus;</button>
+            <button type="button" class="pad-btn" data-key="up" aria-label="Throttle">&uarr;</button>
+            <button type="button" class="pad-btn pad-shift" data-shift="1" aria-label="Shift up">+</button>
+            <button type="button" class="pad-btn" data-key="left" aria-label="Lean left">&larr;</button>
+            <button type="button" class="pad-btn" data-key="down" aria-label="Brake">&darr;</button>
+            <button type="button" class="pad-btn" data-key="right" aria-label="Lean right">&rarr;</button>
+          </div>
+        </div>
+        <button type="button" class="ride-log-btn" id="ride-log-btn" aria-expanded="false" aria-controls="ride-log"><span id="ride-log-label"></span> <b id="ride-log-count">0/10</b></button>
+        <ol class="ride-log" id="ride-log" hidden></ol>
+      </div>
+
+      <div class="container hero-controls" id="hero-controls">
+        <div class="swatches" role="group" aria-label="Paint">
+          <button type="button" class="swatch" data-paint="sunset" aria-pressed="true" style="--c:#ff6b1a"><span>Sunset</span></button>
+          <button type="button" class="swatch" data-paint="ocean" aria-pressed="false" style="--c:#1f6fe0"><span>Ocean</span></button>
+          <button type="button" class="swatch" data-paint="candy" aria-pressed="false" style="--c:#ff3d8b"><span>Candy</span></button>
+          <button type="button" class="swatch" data-paint="mirror" aria-pressed="false" style="--c:#c9ccd0"><span>Mirror</span></button>
+        </div>
+        <div class="throttle">
+          <button type="button" class="btn btn-rev" id="rev-btn">Hold to rev</button>
+          <div class="rpm" aria-live="off">
+            <div class="rpm-bar"><i id="rpm-fill"></i></div>
+            <span><b id="rpm-num">0</b> rpm</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ON THE LIFT: scroll tour, the bike above zooms to each part -->
+    <section id="lift" class="lift">
+      <div class="container">
+        <div class="lift-head ticket">
+          <h2 class="split" id="lift-title"></h2>
+          <p class="lede" id="lift-lede"></p>
+        </div>
+        <ol class="lift-steps" id="lift-steps"></ol>
+      </div>
+      <div class="lift-rail" id="lift-rail" aria-hidden="true">
+        <span>Lift height</span>
+        <div class="lift-gauge"><i></i></div>
+      </div>
+    </section>
+    </div>
+
+    <!-- WORKBENCH: four "how it works" demos on a pegboard; text in data.js > demos, motion in main.js -->
+    <section id="workbench" class="section workbench hazard-top">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="split" data-t="title"></h2>
+          <p class="lede reveal" data-t="lede"></p>
+        </div>
+        <div class="bench reveal">
+          <div class="wb-tabs" id="wb-tabs" role="tablist" data-t-aria="tabsLabel">
+            <button type="button" class="chip wb-tab" role="tab" id="wb-tab-engine" aria-controls="wb-panel-engine" aria-selected="true" data-demo="engine" data-t="engine.tab"></button>
+            <button type="button" class="chip wb-tab" role="tab" id="wb-tab-gearbox" aria-controls="wb-panel-gearbox" aria-selected="false" tabindex="-1" data-demo="gearbox" data-t="gearbox.tab"></button>
+            <button type="button" class="chip wb-tab" role="tab" id="wb-tab-brakes" aria-controls="wb-panel-brakes" aria-selected="false" tabindex="-1" data-demo="brakes" data-t="brakes.tab"></button>
+            <button type="button" class="chip wb-tab" role="tab" id="wb-tab-suspension" aria-controls="wb-panel-suspension" aria-selected="false" tabindex="-1" data-demo="suspension" data-t="suspension.tab"></button>
+          </div>
+
+          <!-- 1. Four-stroke engine: crank centre 160,290, throw 38, rod 100. main.js moves piston, rod, valves and spark from the crank angle. -->
+          <div class="wb-panel" id="wb-panel-engine" role="tabpanel" aria-labelledby="wb-tab-engine">
+            <div class="wb-rig">
+              <svg class="wb-fig" id="wb-engine" viewBox="0 0 320 360" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="719" aria-valuenow="0" data-t-aria="engine.aria" data-stroke="0">
+                <defs><marker id="wb-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" class="wb-ink"/></marker></defs>
+                <circle class="wb-case" cx="160" cy="290" r="64"/>
+                <path class="wb-hint-arc" d="M215 255 A66 66 0 0 1 215 325" marker-end="url(#wb-arrow)"/>
+                <line id="wb-rod" class="wb-rod" x1="160" y1="252" x2="160" y2="152"/>
+                <g id="wb-crank" class="wb-grab">
+                  <circle class="wb-metal-dark" cx="160" cy="290" r="54"/>
+                  <path class="wb-metal" d="M124 298 A38 38 0 0 0 196 298 Z"/>
+                  <circle class="wb-metal-light" cx="160" cy="290" r="9"/>
+                  <circle class="wb-grip" cx="160" cy="252" r="15"/>
+                  <circle class="wb-metal-light" cx="160" cy="252" r="8"/>
+                </g>
+                <rect id="wb-gas" class="wb-gas" x="116" y="116" width="88" height="16"/>
+                <g id="wb-piston">
+                  <rect class="wb-metal-light" x="118" y="132" width="84" height="46" rx="3"/>
+                  <path class="wb-line" d="M118 139H202M118 145H202"/>
+                  <circle class="wb-metal-dark" cx="160" cy="152" r="7"/>
+                  <text class="wb-label" x="160" y="173" text-anchor="middle" data-t="engine.labels.piston"></text>
+                </g>
+                <rect class="wb-metal-dark" x="104" y="110" width="12" height="150"/>
+                <rect class="wb-metal-dark" x="204" y="110" width="12" height="150"/>
+                <path class="wb-pipe" d="M18 84H96"/>
+                <path class="wb-pipe" d="M224 84H302"/>
+                <rect class="wb-metal" x="90" y="60" width="140" height="56" rx="4"/>
+                <path class="wb-port is-in" d="M90 84H112Q134 84 136 110"/>
+                <path class="wb-port" d="M230 84H208Q186 84 184 110"/>
+                <g id="wb-valve-in"><rect class="wb-metal-dark" x="130" y="40" width="12" height="6"/><line class="wb-stem" x1="136" y1="44" x2="136" y2="110"/><path class="wb-metal-dark" d="M125 116H147L140 109H132Z"/></g>
+                <g id="wb-valve-ex"><rect class="wb-metal-dark" x="178" y="40" width="12" height="6"/><line class="wb-stem" x1="184" y1="44" x2="184" y2="110"/><path class="wb-metal-dark" d="M173 116H195L188 109H180Z"/></g>
+                <rect class="wb-plug" x="154" y="32" width="12" height="28" rx="3"/>
+                <rect class="wb-metal-dark" x="156" y="60" width="8" height="56"/>
+                <circle id="wb-spark" class="wb-spark" cx="160" cy="123" r="7" opacity="0"/>
+                <text class="wb-label" x="18" y="70" data-t="engine.labels.mix"></text>
+                <text class="wb-label" x="302" y="70" text-anchor="end" data-t="engine.labels.exhaust"></text>
+                <text class="wb-label" x="160" y="24" text-anchor="middle" data-t="engine.labels.spark"></text>
+                <text class="wb-label" x="90" y="352" text-anchor="end" data-t="engine.labels.crank"></text>
+              </svg>
+              <p class="wb-hint"><span data-t="engine.hint"></span> <span class="wb-readout"><span data-t="engine.angle"></span> <b id="wb-angle">0°</b> / 720°</span></p>
+            </div>
+            <div class="wb-card ticket" id="wb-card-engine" aria-live="polite">
+              <span class="wb-tag tape"></span><h3></h3><p class="wb-text"></p><p class="wb-note" data-t="engine.note"></p>
+            </div>
+          </div>
+
+          <!-- 2. Gearbox: two meshing gears whose teeth always add up to 50; main.js redraws them -->
+          <div class="wb-panel" id="wb-panel-gearbox" role="tabpanel" aria-labelledby="wb-tab-gearbox" hidden>
+            <div class="wb-rig">
+              <svg class="wb-fig" id="wb-gears" viewBox="0 0 340 250" aria-hidden="true">
+                <g id="wb-g1" class="wb-gear is-drive"><path/><circle class="wb-hub" r="13"/><circle class="wb-mark" r="5"/></g>
+                <g id="wb-g2" class="wb-gear"><path/><circle class="wb-hub" r="13"/><circle class="wb-mark" r="5"/></g>
+                <text class="wb-label" x="88" y="244" text-anchor="middle" data-t="gearbox.labels.engine"></text>
+                <text class="wb-label" x="213" y="244" text-anchor="middle" data-t="gearbox.labels.wheel"></text>
+              </svg>
+              <div class="wb-ctl">
+                <label for="wb-gear" data-t="gearbox.control"></label>
+                <input class="wb-range" id="wb-gear" type="range" min="0" max="6" step="1" value="1">
+                <div class="wb-ticks" id="wb-gear-ticks" aria-hidden="true"></div>
+              </div>
+              <p class="wb-hint" data-t="gearbox.hint"></p>
+            </div>
+            <div class="wb-card ticket" id="wb-card-gearbox" aria-live="polite">
+              <span class="wb-tag tape"></span><h3></h3><p class="wb-text"></p><p class="wb-note" data-t="gearbox.note"></p>
+            </div>
+          </div>
+
+          <!-- 3. Brakes: side view of the front wheel (centre 290,222) + the caliper seen from above -->
+          <div class="wb-panel" id="wb-panel-brakes" role="tabpanel" aria-labelledby="wb-tab-brakes" hidden>
+            <div class="wb-rig">
+              <svg class="wb-fig" id="wb-brakes" viewBox="0 0 420 320" aria-hidden="true">
+                <rect class="wb-inset" x="10" y="62" width="150" height="200" rx="8"/>
+                <text class="wb-label" x="85" y="52" text-anchor="middle" data-t="brakes.labels.top"></text>
+                <rect class="wb-disc" x="80" y="76" width="10" height="172" rx="2"/>
+                <path class="wb-caliper" d="M28 104H142V196H124V116H46V196H28Z"/>
+                <g id="wb-pad-l"><rect class="wb-piston-c" x="46" y="128" width="18" height="54"/><rect class="wb-metal-dark" x="64" y="118" width="4" height="74"/><rect class="wb-pad" x="68" y="120" width="12" height="70"/></g>
+                <g id="wb-pad-r"><rect class="wb-piston-c" x="106" y="128" width="18" height="54"/><rect class="wb-metal-dark" x="102" y="118" width="4" height="74"/><rect class="wb-pad" x="90" y="120" width="12" height="70"/></g>
+                <text class="wb-label" x="20" y="244" data-t="brakes.labels.pads"></text>
+                <text class="wb-label" x="96" y="92" data-t="brakes.labels.disc"></text>
+                <line class="wb-ground" x1="170" y1="310" x2="412" y2="310"/>
+                <circle class="wb-tyre" cx="290" cy="222" r="80"/>
+                <circle class="wb-rim" cx="290" cy="222" r="69"/>
+                <g id="wb-disc">
+                  <circle class="wb-disc" cx="290" cy="222" r="56"/>
+                  <g class="wb-holes"><circle cx="334" cy="222" r="3.5"/><circle cx="321.1" cy="253.1" r="3.5"/><circle cx="290" cy="266" r="3.5"/><circle cx="258.9" cy="253.1" r="3.5"/><circle cx="246" cy="222" r="3.5"/><circle cx="258.9" cy="190.9" r="3.5"/><circle cx="290" cy="178" r="3.5"/><circle cx="321.1" cy="190.9" r="3.5"/></g>
+                  <circle class="wb-metal-dark" cx="290" cy="222" r="26"/>
+                  <circle class="wb-metal-light" cx="290" cy="204" r="3.5"/><circle class="wb-metal-light" cx="307" cy="216" r="3.5"/><circle class="wb-metal-light" cx="301" cy="237" r="3.5"/><circle class="wb-metal-light" cx="279" cy="237" r="3.5"/><circle class="wb-metal-light" cx="273" cy="216" r="3.5"/>
+                </g>
+                <path id="wb-hose" class="wb-hose" d="M266 64C268 110 268 140 262 172"/>
+                <g id="wb-upper">
+                  <rect class="wb-metal-light wb-outline" x="283" y="36" width="14" height="114"/>
+                  <rect class="wb-metal-dark" x="268" y="34" width="44" height="12" rx="3"/>
+                  <rect class="wb-metal-dark" x="180" y="38" width="96" height="10" rx="4"/>
+                  <rect class="wb-ink" x="180" y="34" width="44" height="18" rx="6"/>
+                  <rect class="wb-metal-dark" x="252" y="48" width="22" height="16" rx="3"/>
+                  <path id="wb-lever" class="wb-lever" d="M258 60L186 72"/>
+                </g>
+                <line class="wb-bracket" x1="262" y1="204" x2="284" y2="192"/>
+                <rect class="wb-metal-dark" x="280" y="128" width="20" height="100" rx="8"/>
+                <circle class="wb-metal-light" cx="290" cy="222" r="7"/>
+                <rect class="wb-caliper" x="-14" y="-24" width="28" height="48" rx="7" transform="translate(249 193) rotate(35)"/>
+                <text class="wb-label" x="186" y="98" data-t="brakes.labels.lever"></text>
+                <text class="wb-label" x="226" y="166" text-anchor="end" data-t="brakes.labels.caliper"></text>
+                <text class="wb-label" x="308" y="118" data-t="brakes.labels.fork"></text>
+              </svg>
+              <button type="button" class="btn wb-hold" id="wb-brake-btn" aria-pressed="false" data-t="brakes.button"></button>
+              <p class="wb-hint" data-t="brakes.hint"></p>
+            </div>
+            <div class="wb-card ticket" id="wb-card-brakes" aria-live="polite">
+              <span class="wb-tag tape" data-t="brakes.tag"></span><h3></h3><p class="wb-text"></p><p class="wb-note" data-t="brakes.note"></p>
+            </div>
+          </div>
+
+          <!-- 4. Suspension: wheel (axle 170,270) rises over a bump; spring, damper rod and rider follow -->
+          <div class="wb-panel" id="wb-panel-suspension" role="tabpanel" aria-labelledby="wb-tab-suspension" hidden>
+            <div class="wb-rig">
+              <svg class="wb-fig" id="wb-susp" viewBox="0 0 340 340" aria-hidden="true">
+                <path id="wb-road" class="wb-road" d="M0 326H340"/>
+                <path id="wb-spring" class="wb-spring" d="M170 116V214"/>
+                <line id="wb-rod2" class="wb-rod2" x1="170" y1="116" x2="170" y2="168"/>
+                <g id="wb-swheel">
+                  <circle class="wb-tyre" cx="170" cy="270" r="50"/>
+                  <circle class="wb-rim" cx="170" cy="270" r="40"/>
+                  <rect class="wb-damper" x="163" y="168" width="14" height="50"/>
+                  <rect class="wb-metal-dark" x="161" y="214" width="18" height="58" rx="6"/>
+                  <rect class="wb-metal-dark" x="146" y="214" width="48" height="6" rx="2"/>
+                  <circle class="wb-metal-light" cx="170" cy="270" r="7"/>
+                </g>
+                <g id="wb-sbody">
+                  <path class="wb-body" d="M40 100L74 72L118 66L146 50L214 46L256 62L300 70L304 100Z"/>
+                  <rect class="wb-metal-dark" x="146" y="100" width="48" height="16" rx="3"/>
+                  <path class="wb-limb" d="M112 60L150 24M150 24L204 46M112 60L142 80L128 100"/>
+                  <circle class="wb-helmet" cx="160" cy="14" r="11"/>
+                </g>
+                <rect class="wb-key-spring" x="244" y="8" width="16" height="8" rx="2"/>
+                <text class="wb-label" x="266" y="17" data-t="suspension.labels.spring"></text>
+                <rect class="wb-ink" x="244" y="28" width="16" height="8" rx="2"/>
+                <text class="wb-label" x="266" y="37" data-t="suspension.labels.damper"></text>
+              </svg>
+              <div class="wb-ctl">
+                <label for="wb-bump" data-t="suspension.control"></label>
+                <input class="wb-range" id="wb-bump" type="range" min="0" max="100" step="1" value="0">
+                <div class="wb-ticks is-ends" aria-hidden="true"><span data-t="suspension.scale.0"></span><span data-t="suspension.scale.1"></span></div>
+              </div>
+              <p class="wb-hint" data-t="suspension.hint"></p>
+            </div>
+            <div class="wb-card ticket" id="wb-card-suspension" aria-live="polite">
+              <span class="wb-tag tape" data-t="suspension.tag"></span><h3></h3><p class="wb-text"></p><p class="wb-note" data-t="suspension.note"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marquee-track"></div>
+    </div>
+
+    <!-- LINEUP: filtered with Flip -->
+    <section id="lineup" class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="split">Pick your line.</h2>
+          <p class="lede reveal">Track, street, dirt or the long way home. Hover a bike to pop a wheelie.</p>
+        </div>
+        <div class="chips reveal" role="group" aria-label="Filter the lineup">
+          <button type="button" class="chip" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="chip" data-filter="sport" aria-pressed="false">Sport</button>
+          <button type="button" class="chip" data-filter="street" aria-pressed="false">Street</button>
+          <button type="button" class="chip" data-filter="offroad" aria-pressed="false">Off-road</button>
+          <button type="button" class="chip" data-filter="cruise" aria-pressed="false">Cruise</button>
+        </div>
+        <ul class="lineup" id="lineup-grid"></ul>
+      </div>
+    </section>
+
+    <!-- SERVICE BAY: tools on a pegboard shadow board + T-CLOCS pre-ride check; text in data.js > service, preRide; motion in main.js -->
+    <section id="service" class="section service hazard-top">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="split" id="sv-title"></h2>
+          <p class="lede reveal" id="sv-lede"></p>
+        </div>
+        <div class="sv-wall reveal">
+          <div class="sv-board">
+            <p class="sv-hint" id="sv-hint"></p>
+            <ul class="sv-tools" id="sv-tools"></ul>
+          </div>
+          <article class="sv-ticket ticket" id="sv-ticket" aria-live="polite">
+            <span class="wb-tag tape" id="sv-tag"></span>
+            <h3 id="sv-name"></h3>
+            <div class="sv-body" id="sv-body"></div>
+            <p class="wb-note" id="sv-note"></p>
+          </article>
+        </div>
+        <div class="sv-check ticket reveal" id="sv-check">
+          <div class="sv-check-head">
+            <h3 id="sv-check-title"></h3>
+            <p id="sv-check-intro"></p>
+          </div>
+          <fieldset class="sv-list">
+            <legend class="sr-only" id="sv-check-legend"></legend>
+            <div id="sv-items" class="sv-items"></div>
+          </fieldset>
+          <p class="sv-count" id="sv-count" role="status"></p>
+          <p class="sv-stamp" id="sv-stamp" aria-hidden="true"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HERITAGE: a bike rides the road as you scroll -->
+    <section id="heritage" class="heritage hazard-top">
+      <div class="heritage-pin">
+        <div class="container heritage-head">
+          <h2 class="split">Ride through the years.</h2>
+        </div>
+        <svg class="road" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <path id="road-base" class="road-base" d="M-20 480 C200 480 260 200 460 220 S700 520 860 420 S1000 120 1220 140"/>
+          <path id="road-line" class="road-line" d="M-20 480 C200 480 260 200 460 220 S700 520 860 420 S1000 120 1220 140"/>
+          <g id="road-marks"></g>
+          <g id="road-rider"></g>
+        </svg>
+        <ol class="container milestones" id="milestones"></ol>
+      </div>
+    </section>
+
+    <!-- GARAGE: throw the bike -->
+    <section id="garage" class="section garage hazard-top">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="split">Throw it.</h2>
+          <p class="lede reveal">Grab the bike and fling it down the strip. Throw hard enough and it lifts the front.</p>
+        </div>
+        <div class="strip reveal" id="strip">
+          <div class="strip-bike" id="strip-bike" tabindex="0" role="slider" aria-label="Bike position on the strip" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+        </div>
+        <p class="speedo reveal"><b id="speedo">0</b> toy km/h <span>(made-up scale: your throw speed, not a real one)</span></p>
+      </div>
+    </section>
+
+    <!-- CREW: newsletter form -->
+    <section id="crew" class="section crew">
+      <div class="container crew-grid">
+        <div>
+          <h2 class="split">Join the crew.</h2>
+          <p class="lede reveal">Ride days, new models and track news. One email, when there is something worth saying.</p>
+        </div>
+        <form class="crew-form reveal" id="crew-form" novalidate>
+          <label for="crew-email">Email</label>
+          <div class="crew-row">
+            <input id="crew-email" type="email" name="email" autocomplete="email" spellcheck="false" required placeholder="you@example.com">
+            <button type="submit" class="btn btn-go" id="crew-btn"><span>Join</span><span class="go-bike" id="go-bike" aria-hidden="true"></span></button>
+          </div>
+          <p class="form-status" id="form-status" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer hazard-top">
+    <div class="container footer-grid">
+      <p class="footer-mark" translate="no">KESTREL<span>moto garage</span></p>
+      <p class="disclaimer">KESTREL is a made-up brand for a student project. Its bikes, names and history are fictional.</p>
+      <p class="model-credit" id="model-credit">3D model: hand-built in code.</p>
+      <p class="footer-year">&copy; <span id="year"></span></p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MotionPathPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Flip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Physics2DPlugin.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/bike3d.js"></script>
+</body>
+</html>

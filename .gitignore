@@ -1,0 +1,19 @@
+# secrets / env
+.env
+.env.*
+
+# deps and build output
+node_modules/
+dist/
+
+# local-only files (old brand, big downloads, test output)
+*.zip
+plans/
+CLAUDE.md
+assets/models/
+out/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/

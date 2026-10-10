@@ -1,0 +1,864 @@
+/* Tokens come from design-dna.json */
+/* Tokens in three layers (design-system skill): primitives > semantic > component.
+   Values come from design-dna.json. Components use semantic or component tokens only. */
+:root {
+  /* Primitives: raw values. Daylight workshop (concrete, paper, ink) + the night set for Ride mode */
+  --concrete-200: #e9e5dc;
+  --concrete-400: #cfc8b9;
+  --concrete-500: #bdb39f;
+  --paper-50: #f8f5ef;
+  --paper-100: #efeae0;
+  --ink-900: #1c1e19;
+  --ink-600: #595d52;
+  --asphalt-800: #34362f;
+  --steel-500: #8b9096;
+  --tape-200: rgba(241, 220, 154, 0.9);
+  --yellow-400: #f2c230;
+  --gray-950: #0b0c0a;
+  --gray-900: #14160f;
+  --gray-850: #1d2017;
+  --gray-800: #2a2e22;
+  --gray-400: #a3aa97;
+  --gray-50: #f1f4ea;
+  /* Colour set: one accent per section (fills under ink text; -700 = text on light) */
+  --orange-500: #ff6b1a;
+  --orange-400: #ff8a45;
+  --orange-700: #b23f00;
+  --orange-900: #3f1800;
+  --blue-500: #2f8cff;
+  --blue-400: #5aa5ff;
+  --blue-700: #1556b8;
+  --pink-500: #ff4f9a;
+  --pink-400: #ff78b3;
+  --pink-700: #b8135e;
+  --teal-500: #14c2a8;
+  --teal-400: #3fd9c1;
+  --teal-700: #00715f;
+  --violet-500: #a07aff;
+  --violet-400: #b896ff;
+  --violet-700: #5b2fd1;
+  --sun-500: #ffc21a;
+  --sun-400: #ffd34d;
+  --sun-700: #855700;
+  --red-500: #ff3b30;
+  --red-700: #b3261e;
+  --steel-300: #c4c7cb;
+  --steel-700: #5d6268;
+  --orange-600: #d2561c;
+  --orange-300: #f6a54a;
+  --blue-200: #bcd7ef;
+  --blue-300: #8fbbe0;
+  --black: #000;
+  --ease-throttle: cubic-bezier(0.75, 0, 0.15, 1);
+  --ease-pop: cubic-bezier(0.175, 0.885, 0.32, 1.4);
+  --dur-quick: 0.18s;
+  --dur-standard: 0.45s;
+  --radius-sm: 4px;
+  --radius-lg: 18px;
+  --radius-full: 999px;
+
+  /* Semantic: what a value is for */
+  --color-bg: var(--concrete-200);
+  --color-surface: var(--paper-50);
+  --color-surface-2: var(--paper-100);
+  --color-border: var(--concrete-400);
+  --color-text: var(--ink-900);
+  --color-text-muted: var(--ink-600);
+  --color-accent: var(--orange-500);
+  --color-accent-hover: var(--orange-400);
+  --color-accent-text: var(--orange-700); /* accent text, links and focus rings on light */
+  --color-on-accent: var(--ink-900);
+  --color-on-accent-muted: var(--orange-900);
+  --color-danger: var(--red-500);
+  --color-error-on-light: var(--red-700);
+  --color-asphalt: var(--asphalt-800);
+  --color-paint: var(--yellow-400); /* painted floor lines */
+  /* Workbench drawings */
+  --color-metal: var(--steel-500);
+  --color-metal-light: var(--steel-300);
+  --color-metal-dark: var(--steel-700);
+  --color-hot: var(--orange-600);
+  --color-mix: var(--blue-200);
+  --color-mix-dense: var(--blue-300);
+  --color-burn: var(--orange-300);
+  --color-smoke: var(--concrete-400);
+  --color-fluid: var(--orange-300);
+  /* Service bay */
+  --color-shadow-paint: var(--concrete-500); /* painted tool outlines on the board */
+  --color-stamp: var(--red-700);
+  /* Night set: the old paddock palette, used by Ride mode */
+  --color-night-bg: var(--gray-950);
+  --color-night-surface: var(--gray-900);
+  --color-night-surface-2: var(--gray-850);
+  --color-night-border: var(--gray-800);
+  --color-night-text: var(--gray-50);
+  --color-night-muted: var(--gray-400);
+  /* Workshop textures (CSS only, no images) */
+  --tape: var(--tape-200);
+  --steel: var(--steel-500);
+  --hazard: repeating-linear-gradient(-45deg, var(--yellow-400) 0 14px, var(--ink-900) 14px 28px);
+  --pegboard: radial-gradient(circle at 50% 50%, rgba(28, 30, 25, 0.28) 0 2.5px, transparent 3.5px) 0 0 / 24px 24px, var(--paper-100);
+  --light-shaft: rgba(255, 252, 240, 0.85);
+  --light-door: rgba(255, 246, 220, 0.6);
+  --shadow-ink: rgba(28, 30, 25, 0.45);
+  --tread: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='26'%3E%3Cpath d='M2 2h15l-5 9H2zM38 15H23l5-9h10zM19 15h4l-3 9h-4z' fill='%231c1e19'/%3E%3C/svg%3E");
+  --concrete: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .11 0 0 0 0 .1 0 0 0 0 .08 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+  --ease: var(--ease-throttle);
+  --pop: var(--ease-pop);
+  --quick: var(--dur-quick);
+  --standard: var(--dur-standard);
+  --header-h: 68px;
+
+  /* Component */
+  --btn-bg: var(--color-accent);
+  --btn-bg-hover: var(--color-accent-hover);
+  --btn-fg: var(--color-on-accent);
+  --btn-radius: var(--radius-sm);
+  --card-bg: var(--color-surface);
+  --card-border: var(--color-border);
+  --card-radius: var(--radius-lg);
+  --chip-radius: var(--radius-full);
+  --panel-bg: rgba(248, 245, 239, 0.94);
+  --panel-border: var(--color-border);
+  --header-bg: var(--paper-50);
+  --panel-bg-night: rgba(20, 22, 15, 0.92);
+  --hotspot-size: 30px;
+  --hud-dial: 120px;
+  --hotspot-bg: var(--color-surface);
+  --hotspot-ring: var(--color-accent-text);
+  --wb-board: var(--pegboard);
+  --wb-frame: var(--color-asphalt);
+  --wb-sheet: var(--color-surface);
+  --sv-board: var(--pegboard);
+  --sv-frame: var(--color-asphalt);
+  --sv-paint: var(--color-shadow-paint);
+  --sv-stamp: var(--color-stamp);
+  --sv-lift-shadow: var(--shadow-ink);
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--concrete), var(--color-bg);
+  color: var(--color-text);
+  font: 400 16px/1.6 "Archivo", system-ui, sans-serif;
+  overflow-x: hidden;
+}
+img, svg { display: block; max-width: 100%; }
+main { overflow-x: clip; } /* the tilted marquee and the stamp's scale-in must not widen the phone layout; clip keeps sticky working */
+[hidden] { display: none !important; }
+a { color: inherit; }
+button { font: inherit; color: inherit; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+h1, h2, h3 { text-wrap: balance; }
+/* Each section gets its own accent; everything inside uses --color-accent*, so it recolours itself */
+.lift { --color-accent: var(--blue-500); --color-accent-hover: var(--blue-400); --color-accent-text: var(--blue-700); }
+#lineup, .marquee { --color-accent: var(--pink-500); --color-accent-hover: var(--pink-400); --color-accent-text: var(--pink-700); }
+.service { --color-accent: var(--teal-500); --color-accent-hover: var(--teal-400); --color-accent-text: var(--teal-700); }
+.heritage { --color-accent: var(--violet-500); --color-accent-hover: var(--violet-400); --color-accent-text: var(--violet-700); }
+.garage { --color-accent: var(--sun-500); --color-accent-hover: var(--sun-400); --color-accent-text: var(--sun-700); }
+:focus-visible { outline: 3px solid var(--color-accent-text); outline-offset: 3px; }
+.container { width: min(1200px, 100% - 32px); margin-inline: auto; }
+section[id] { scroll-margin-top: var(--header-h); }
+
+.skip-link {
+  position: fixed; left: 16px; top: -60px; z-index: 100;
+  background: var(--color-accent); color: var(--color-on-accent); padding: 10px 16px; font-weight: 700;
+}
+.skip-link:focus { top: 12px; }
+
+/* ---------- Workshop textures ---------- */
+/* Masking tape label with torn ends */
+.tape {
+  display: inline-block; background: var(--tape); color: var(--color-text); padding: 4px 14px; rotate: -2deg;
+  clip-path: polygon(0 8%, 3% 0, 6% 10%, 94% 4%, 97% 0, 100% 12%, 99% 50%, 100% 88%, 97% 100%, 94% 92%, 6% 100%, 3% 90%, 0 96%, 1% 50%);
+}
+/* Service ticket: paper with a perforated top edge */
+.ticket {
+  position: relative; background: var(--color-surface); padding: 18px 18px 14px;
+  box-shadow: 0 1px 0 var(--color-border), 0 10px 24px -14px var(--shadow-ink);
+  -webkit-mask: radial-gradient(circle 5px at 9px 0, transparent 98%, #000) -9px 0 / 18px 100% repeat-x;
+  mask: radial-gradient(circle 5px at 9px 0, transparent 98%, #000) -9px 0 / 18px 100% repeat-x;
+}
+/* Hazard stripe divider on top of a section */
+.hazard-top { position: relative; }
+.hazard-top::before { content: ""; position: absolute; inset: 0 0 auto; height: 10px; background: var(--hazard); }
+
+/* ---------- Lively background: light shafts, roller-door band, dust, tyre tracks ---------- */
+.workshop-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.shaft {
+  position: absolute; top: -20%; width: 34vw; height: 140%; rotate: 18deg; opacity: 0.55;
+  background: linear-gradient(90deg, transparent, var(--light-shaft) 45%, var(--light-shaft) 55%, transparent);
+  animation: drift 26s ease-in-out infinite alternate;
+}
+.shaft:nth-child(1) { left: 6%; }
+.shaft:nth-child(2) { left: 48%; width: 20vw; opacity: 0.4; animation-duration: 34s; animation-delay: -12s; }
+.shaft:nth-child(3) { left: 78%; width: 26vw; opacity: 0.35; animation-duration: 30s; animation-delay: -6s; }
+@keyframes drift { to { translate: 6vw 0; opacity: 0.25; } }
+.door-light {
+  position: absolute; left: 0; right: 0; top: 10%; height: 22vh;
+  background: linear-gradient(180deg, transparent, var(--light-door), transparent);
+}
+.dust { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tyre-track {
+  position: absolute; top: 0; bottom: 0; left: max(4px, (100% - 1320px) / 2); width: 40px; opacity: 0.08;
+  background: var(--tread) 0 0 / 40px 26px repeat-y;
+}
+@media (prefers-reduced-motion: reduce) { .shaft { animation: none; } }
+
+/* Display type: wide, heavy, leaning forward */
+h1, h2, .wordmark, .footer-mark, .btn, .chip, .marquee-track {
+  font-stretch: 125%;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+h1, h2 { line-height: 0.9; margin: 0; }
+h2 { font-size: clamp(2.2rem, 6vw, 4.8rem); }
+.lede { color: var(--color-text-muted); max-width: 46ch; font-size: 1.1rem; margin: 0; }
+
+/* ---------- Loader ---------- */
+.loader { display: none; }
+.js .loader {
+  position: fixed; inset: 0; z-index: 90;
+  display: grid; place-content: center; justify-items: center; gap: 8px;
+  background: var(--concrete), var(--color-surface);
+}
+.tach { width: min(320px, 70vw); }
+.tach-arc, .tach-red { fill: none; stroke-width: 10; stroke-linecap: round; }
+.tach-arc { stroke: var(--color-border); }
+.tach-red { stroke: var(--color-danger); }
+.tach-needle { stroke: var(--color-text); stroke-width: 5; stroke-linecap: round; }
+.loader-rpm { margin: 0; font: 900 italic 2.6rem/1 "Archivo"; font-stretch: 125%; display: flex; align-items: baseline; gap: 8px; }
+.loader-rpm small { font-size: 0.8rem; color: var(--color-text-muted); font-style: normal; font-stretch: 100%; font-weight: 500; }
+
+/* ---------- Cursor and progress rider ---------- */
+.cursor { display: none; }
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .cursor {
+    display: block; position: fixed; left: 0; top: 0; z-index: 80;
+    width: 34px; height: 34px; margin: -17px 0 0 -17px;
+    color: var(--color-text); pointer-events: none;
+  }
+  .cursor svg { transition: scale var(--quick) var(--pop); }
+  .cursor.is-hot svg { scale: 1.6; }
+}
+
+/* Runs along the header's bottom edge; the little rider sits on the bar, below the nav text */
+.progress { position: fixed; left: 0; right: 0; top: calc(var(--header-h) - 3px); height: 3px; z-index: 60; pointer-events: none; }
+.progress-fill { height: 100%; background: var(--color-accent); transform-origin: left; transform: scaleX(0); }
+.progress-rider { position: absolute; bottom: 100%; left: 0; width: 28px; }
+
+/* ---------- Header ---------- */
+.site-header {
+  position: fixed; inset: 0 0 auto; z-index: 50; height: var(--header-h);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--color-border); box-shadow: 0 6px 18px -14px var(--shadow-ink);
+}
+.nav-wrap { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.wordmark, .footer-mark { font-size: 1.35rem; text-decoration: none; color: var(--color-text); display: flex; align-items: baseline; gap: 8px; margin: 0; }
+.wordmark { align-items: center; padding: 4px 12px 4px 14px; }
+.wordmark span, .footer-mark span {
+  font: 600 0.62rem/1 "Archivo"; letter-spacing: 0.08em; color: var(--color-on-accent);
+  background: var(--color-accent); padding: 3px 6px; transform: skewX(-8deg); white-space: nowrap;
+}
+.site-nav { display: flex; gap: 28px; }
+.site-nav a { text-decoration: none; font-weight: 600; color: var(--color-text-muted); position: relative; padding: 6px 0; transition: color var(--quick); }
+.site-nav a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--color-accent);
+  transform: scaleX(0); transform-origin: right; transition: transform var(--standard) var(--ease);
+}
+.site-nav a:hover, .site-nav a.is-active { color: var(--color-text); }
+.site-nav a:hover::after, .site-nav a.is-active::after { transform: scaleX(1); transform-origin: left; }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.sound-toggle {
+  display: flex; align-items: center; gap: 8px; background: none; cursor: pointer;
+  border: 1px solid var(--color-border); border-radius: 999px; padding: 6px 12px; font-size: 0.85rem; color: var(--color-text-muted);
+}
+.sound-toggle[aria-pressed="true"] { color: var(--color-on-accent); background: var(--color-accent); border-color: var(--color-accent); }
+.sound-bars { display: flex; align-items: flex-end; gap: 2px; height: 12px; }
+.sound-bars i { width: 3px; height: 4px; background: currentColor; }
+.sound-toggle[aria-pressed="true"] .sound-bars i:nth-child(2) { height: 12px; }
+.sound-toggle[aria-pressed="true"] .sound-bars i:nth-child(3) { height: 8px; }
+.menu-toggle { display: none; }
+/* 8 links: tighten first, then fold into the menu button (measured: inline needs about 920px when compact) */
+@media (max-width: 1100px) {
+  .site-nav { gap: 18px; }
+  .sound-label { display: none; }
+}
+
+@media (max-width: 940px) {
+  .menu-toggle {
+    display: grid; gap: 6px; place-content: center; width: 44px; height: 44px;
+    background: none; border: 1px solid var(--color-border); border-radius: 4px; cursor: pointer;
+  }
+  .menu-toggle span { width: 20px; height: 2px; background: var(--color-text); transition: transform var(--standard) var(--ease); }
+  .menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(4px) rotate(45deg); }
+  .menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-4px) rotate(-45deg); }
+  .site-nav {
+    position: fixed; inset: var(--header-h) 0 auto; flex-direction: column; gap: 0;
+    background: var(--color-surface); border-bottom: 1px solid var(--color-border); padding: 8px 16px 16px;
+    visibility: hidden; transform: translateY(-12px); opacity: 0;
+    transition: opacity var(--quick), transform var(--standard) var(--ease), visibility 0s var(--standard);
+  }
+  .site-nav.is-open { visibility: visible; transform: none; opacity: 1; transition-delay: 0s; }
+  .site-nav a { padding: 14px 0; font-size: 1.2rem; border-bottom: 1px solid var(--color-border); }
+  .sound-label { display: none; }
+  .wordmark { font-size: 1.15rem; gap: 6px; padding-inline: 10px; }
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 0 26px; border: 0; border-radius: var(--btn-radius); cursor: pointer;
+  background: var(--btn-bg); color: var(--btn-fg); font-size: 1.05rem; text-decoration: none;
+  transform: skewX(-8deg); transition: background var(--quick), transform var(--quick) var(--pop);
+  user-select: none; -webkit-user-select: none; touch-action: manipulation;
+}
+.btn:hover { background: var(--btn-bg-hover); }
+.btn:active { transform: skewX(-8deg) scale(0.96); }
+
+/* ---------- Bay: one sticky 3D view behind the hero and the lift tour ---------- */
+.bay { position: relative; }
+.bay-view { position: sticky; top: 0; height: 100svh; }
+
+/* ---------- Hero ---------- */
+.hero {
+  margin-top: -100svh; /* sits on top of the sticky 3D view */
+  pointer-events: none; /* drags on empty space reach the canvas below */
+  transition: color 1s var(--ease);
+  position: relative; min-height: 100svh; overflow: hidden;
+  display: grid; grid-template-rows: 1fr auto auto; row-gap: 18px; padding: calc(var(--header-h) + 24px) 0 28px;
+}
+.stage { position: absolute; inset: 0; }
+.stage canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+.stage canvas:active { cursor: grabbing; }
+.stage.is-hover canvas { cursor: pointer; }
+.stage.no-webgl { display: grid; place-items: center; padding: 30vh 16px 22vh; }
+.stage.no-webgl .bike { width: min(640px, 92vw); }
+.hero > :not(.hero-copy) { pointer-events: auto; }
+.hero-copy { position: relative; pointer-events: none; align-self: start; }
+.hero-title { font-size: clamp(3rem, 9vw, 8rem); max-width: 9ch; }
+.hero-sub { color: var(--color-text-muted); max-width: 34ch; margin: 18px 0 0; font-size: 1.05rem; }
+.hero-controls {
+  position: relative; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px;
+}
+.swatches { display: flex; gap: 10px; }
+.swatch {
+  display: grid; justify-items: center; gap: 6px; background: none; border: 0; cursor: pointer; padding: 4px;
+  font-size: 0.78rem; color: var(--color-text-muted);
+}
+.swatch::before {
+  content: ""; width: 40px; height: 40px; border-radius: 50%; background: var(--c);
+  box-shadow: inset 0 0 0 2px var(--shadow-ink); transition: transform var(--quick) var(--pop), box-shadow var(--quick);
+}
+.swatch:hover::before { transform: scale(1.1); }
+.swatch[aria-pressed="true"] { color: var(--color-text); }
+.swatch[aria-pressed="true"]::before { box-shadow: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-accent-text); }
+.throttle { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.btn-rev { min-width: 180px; }
+.btn-rev.is-on { background: var(--color-danger); color: var(--color-text); }
+.rpm { display: grid; gap: 6px; font-size: 0.85rem; color: var(--color-text-muted); min-width: 150px; }
+.rpm b { color: var(--color-text); font-size: 1.4rem; font-style: italic; font-variant-numeric: tabular-nums; }
+.rpm-bar { height: 6px; background: var(--color-border); transform: skewX(-20deg); overflow: hidden; }
+.rpm-bar i { display: block; height: 100%; background: var(--color-accent); transform-origin: left; transform: scaleX(0); }
+.rpm-bar i.is-red { background: var(--color-danger); }
+
+/* ---------- Marquee ---------- */
+.marquee { overflow: hidden; background: var(--color-accent); color: var(--color-on-accent); transform: rotate(-2deg); margin: 40px -10px; }
+.marquee-track { display: flex; width: max-content; font-size: clamp(1.6rem, 4vw, 3rem); line-height: 1; padding: 14px 0; white-space: nowrap; }
+.marquee-track span { padding-right: 0.8em; }
+.marquee-track span:nth-child(even) { -webkit-text-stroke: 2px var(--color-on-accent); color: transparent; }
+
+/* ---------- Sections ---------- */
+.section { padding: clamp(5rem, 12vw, 9rem) 0; }
+.section-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 20px 40px; margin-bottom: 40px; }
+.split .line { padding-bottom: 0.06em; }
+
+/* Lineup */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+.chip {
+  min-height: 44px; border: 1px solid var(--steel); background: var(--color-surface); padding: 9px 18px; border-radius: 999px; cursor: pointer;
+  font-size: 0.85rem; transform: skewX(-8deg); transition: background var(--quick), color var(--quick), border-color var(--quick);
+}
+.chip:hover { border-color: var(--color-text); }
+.chip[aria-pressed="true"], .chip[aria-selected="true"] { background: var(--color-accent); border-color: var(--color-text); color: var(--color-on-accent); }
+.lineup { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.lineup .is-hidden { display: none; }
+/* Dealer hang tag: punched hole and a string running up out of the tag */
+.card {
+  position: relative; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--card-radius);
+  padding: 40px 22px 22px; display: grid; gap: 10px; overflow: hidden;
+  box-shadow: 0 14px 26px -20px var(--shadow-ink);
+  transition: border-color var(--standard), rotate var(--standard) var(--pop);
+}
+.card::before {
+  content: ""; position: absolute; top: 14px; left: 50%; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%;
+  background: var(--color-bg); box-shadow: inset 0 2px 3px var(--shadow-ink), 0 0 0 3px var(--steel);
+}
+.card::after {
+  content: ""; position: absolute; top: -10px; left: 50%; width: 2px; height: 32px; background: var(--color-text-muted);
+  transform-origin: bottom; rotate: 28deg; translate: -1px 0;
+}
+.card:hover { border-color: var(--color-text); rotate: -0.6deg; }
+.card:first-child { grid-column: span 2; }
+@media (max-width: 760px) { .card:first-child { grid-column: auto; } }
+.card .bike { width: 100%; max-width: 420px; margin: 10px auto 4px; overflow: visible; }
+.card-tag { justify-self: start; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.card h3 { margin: 0; font-size: 1.7rem; font-weight: 900; font-style: italic; font-stretch: 125%; line-height: 1; text-transform: uppercase; }
+.card-engine { margin: 0; font-weight: 600; }
+.card p { margin: 0; color: var(--color-text-muted); }
+
+/* Workbench: demos pinned to a pegboard */
+.bench {
+  background: var(--wb-board); border: 10px solid var(--wb-frame); border-radius: var(--radius-sm);
+  padding: clamp(14px, 3vw, 32px); box-shadow: 0 18px 36px -24px var(--shadow-ink);
+}
+.wb-tabs { position: relative; display: flex; gap: 10px; overflow-x: auto; padding: 4px 6px 14px; margin: -4px -6px 4px; scrollbar-width: thin; }
+.wb-tab { flex: none; }
+.wb-panel { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(16px, 3vw, 36px); align-items: center; }
+.wb-rig {
+  position: relative; display: grid; gap: 12px; justify-items: center; padding: 26px 18px 18px;
+  background: var(--wb-sheet); border-radius: var(--radius-sm); box-shadow: 0 10px 24px -16px var(--shadow-ink);
+}
+.wb-rig::before { content: ""; position: absolute; top: -8px; left: 50%; width: 90px; height: 22px; margin-left: -45px; background: var(--tape); rotate: -3deg; }
+.wb-fig { width: 100%; height: auto; max-height: min(440px, 52svh); overflow: visible; }
+.wb-fig:focus-visible { outline-offset: 6px; }
+.wb-hint { margin: 0; font-size: 0.9rem; color: var(--color-text-muted); text-align: center; }
+.wb-readout { white-space: nowrap; color: var(--color-text); }
+.wb-readout b { font-variant-numeric: tabular-nums; display: inline-block; min-width: 3.2ch; text-align: right; }
+.wb-card { display: grid; gap: 10px; border-left: 4px solid var(--color-accent); padding: 22px 22px 18px; align-self: center; }
+.wb-tag { justify-self: start; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.wb-card h3, .sv-ticket h3, .sv-check h3 { margin: 0; font-size: 1.45rem; font-weight: 900; font-style: italic; font-stretch: 125%; line-height: 1.05; text-transform: uppercase; }
+.wb-text { margin: 0; min-height: 4.8em; }
+.wb-note { margin: 0; font-size: 0.92rem; color: var(--color-text-muted); padding-top: 10px; border-top: 1px dashed var(--color-border); }
+.wb-ctl { width: 100%; display: grid; gap: 2px; }
+.wb-ctl label { font-weight: 700; font-size: 0.85rem; }
+.wb-ticks { display: flex; justify-content: space-between; padding: 0 7px; font-weight: 800; font-size: 0.85rem; }
+.wb-ticks span { width: 20px; text-align: center; }
+.wb-ticks.is-ends span { width: auto; font-weight: 600; color: var(--color-text-muted); }
+.wb-hold { min-width: 220px; touch-action: none; -webkit-touch-callout: none; }
+.wb-hold[aria-pressed="true"] { background: var(--color-danger); }
+/* Native range styled as a shift lever / slider knob */
+.wb-range { width: 100%; height: 44px; margin: 0; background: transparent; cursor: pointer; -webkit-appearance: none; appearance: none; }
+.wb-range::-webkit-slider-runnable-track { height: 10px; border-radius: 5px; background: var(--color-asphalt); }
+.wb-range::-moz-range-track { height: 10px; border-radius: 5px; background: var(--color-asphalt); }
+.wb-range::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 34px; height: 34px; margin-top: -12px; border-radius: 50%;
+  background: var(--color-accent); border: 3px solid var(--color-text); transition: scale var(--quick) var(--pop);
+}
+.wb-range::-moz-range-thumb { width: 28px; height: 28px; border-radius: 50%; background: var(--color-accent); border: 3px solid var(--color-text); }
+.wb-range:active::-webkit-slider-thumb { scale: 1.12; }
+/* Drawing parts */
+.wb-ink { fill: var(--color-text); }
+.wb-metal { fill: var(--color-metal); }
+.wb-metal-light { fill: var(--color-metal-light); }
+.wb-metal-dark { fill: var(--color-metal-dark); }
+.wb-outline { stroke: var(--color-metal-dark); stroke-width: 1.5; }
+.wb-line { fill: none; stroke: var(--color-metal-dark); stroke-width: 2; }
+.wb-label { fill: var(--color-text); font: 700 13px "Archivo", sans-serif; }
+.wb-case { fill: var(--color-surface-2); stroke: var(--color-metal-dark); stroke-width: 3; }
+.wb-hint-arc { fill: none; stroke: var(--color-accent-text); stroke-width: 3; stroke-dasharray: 6 5; }
+.wb-grab { cursor: grab; }
+.wb-grab:active { cursor: grabbing; }
+.wb-grip { fill: none; stroke: var(--color-accent); stroke-width: 4; }
+.wb-rod { stroke: var(--color-metal); stroke-width: 14; stroke-linecap: round; }
+.wb-stem { stroke: var(--color-metal-dark); stroke-width: 4; }
+.wb-pipe { fill: none; stroke: var(--color-metal-dark); stroke-width: 18; }
+.wb-port { fill: none; stroke: var(--color-smoke); stroke-width: 10; }
+.wb-port.is-in { stroke: var(--color-mix); }
+.wb-plug { fill: var(--color-surface); stroke: var(--color-text); stroke-width: 2; }
+.wb-spark { fill: var(--color-paint); stroke: var(--color-hot); stroke-width: 3; }
+.wb-gas { fill: var(--color-mix); transition: fill var(--standard); }
+#wb-engine[data-stroke="1"] .wb-gas { fill: var(--color-mix-dense); }
+#wb-engine[data-stroke="2"] .wb-gas { fill: var(--color-burn); }
+#wb-engine[data-stroke="3"] .wb-gas { fill: var(--color-smoke); }
+.wb-gear path { fill: var(--color-metal-light); stroke: var(--color-metal-dark); stroke-width: 2; stroke-linejoin: round; }
+.wb-gear.is-drive path { fill: var(--color-accent); stroke: var(--color-text); }
+.wb-gear { transition: opacity var(--standard); }
+.wb-gear.is-free { opacity: 0.5; }
+.wb-hub { fill: var(--color-metal-dark); }
+.wb-mark { fill: var(--color-surface); stroke: var(--color-text); stroke-width: 2; }
+.wb-inset { fill: var(--color-surface-2); stroke: var(--color-metal-dark); stroke-width: 2; stroke-dasharray: 6 4; }
+.wb-disc { fill: var(--color-metal); }
+.wb-holes { fill: var(--color-surface); }
+.wb-caliper { fill: var(--color-accent); stroke: var(--color-text); stroke-width: 2; }
+.wb-pad { fill: var(--color-text); }
+.wb-piston-c { fill: var(--color-metal-light); stroke: var(--color-metal-dark); stroke-width: 1.5; }
+.wb-tyre { fill: none; stroke: var(--color-asphalt); stroke-width: 14; }
+.wb-rim { fill: none; stroke: var(--color-metal-dark); stroke-width: 5; }
+.wb-ground { stroke: var(--color-asphalt); stroke-width: 4; }
+.wb-hose { fill: none; stroke: var(--color-text); stroke-width: 4; stroke-linecap: round; transition: stroke var(--quick); }
+.wb-hose.is-on { stroke: var(--color-hot); }
+.wb-lever { stroke: var(--color-metal-dark); stroke-width: 7; stroke-linecap: round; }
+.wb-bracket { stroke: var(--color-metal-dark); stroke-width: 6; }
+.wb-road { fill: var(--color-surface-2); stroke: var(--color-asphalt); stroke-width: 4; }
+.wb-spring { fill: none; stroke: var(--color-accent-text); stroke-width: 5; stroke-linejoin: round; }
+.wb-key-spring { fill: var(--color-accent-text); }
+.wb-damper { fill: var(--color-text); }
+.wb-rod2 { stroke: var(--color-metal); stroke-width: 6; }
+.wb-body { fill: var(--color-accent); stroke: var(--color-text); stroke-width: 2.5; stroke-linejoin: round; }
+.wb-limb { fill: none; stroke: var(--color-text); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.wb-helmet { fill: var(--color-accent); stroke: var(--color-text); stroke-width: 3; }
+@media (max-width: 760px) {
+  .wb-panel { grid-template-columns: minmax(0, 1fr); }
+  .bench { border-width: 6px; margin-inline: -8px; }
+  .wb-rig { padding: 22px 12px 14px; }
+  .wb-card { padding: 18px 16px 14px; }
+  .wb-card h3, .sv-ticket h3, .sv-check h3 { font-size: 1.2rem; }
+  #wb-brakes .wb-label { font-size: 16px; }
+}
+
+/* Service bay: tools hang on a shadow board (painted outlines); a T-CLOCS card below */
+.sv-wall {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(16px, 3vw, 36px); align-items: start;
+  background: var(--sv-board); border: 10px solid var(--sv-frame); border-radius: var(--radius-sm);
+  padding: clamp(14px, 3vw, 32px); box-shadow: 0 18px 36px -24px var(--shadow-ink);
+}
+.sv-board { display: grid; gap: 10px; }
+.sv-hint { margin: 0; font-weight: 700; font-size: 0.9rem; justify-self: start; background: var(--color-surface); padding: 2px 8px; border-radius: var(--radius-sm); }
+.sv-tools { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.sv-tool {
+  width: 100%; display: grid; justify-items: center; gap: 10px; padding: 22px 6px 12px; cursor: pointer;
+  background: none; border: 2px dashed transparent; border-radius: var(--radius-sm); transition: border-color var(--quick);
+}
+.sv-tool:hover { border-color: var(--color-border); }
+.sv-tool[aria-pressed="true"] { border-color: var(--color-accent-text); }
+.sv-spot { position: relative; width: min(120px, 100%); aspect-ratio: 1; }
+.sv-spot::before { /* the two pegs it hangs on */
+  content: ""; position: absolute; left: 25%; right: 25%; top: -14px; height: 10px;
+  background: radial-gradient(circle at 10% 50%, var(--color-metal-dark) 0 4px, transparent 5px), radial-gradient(circle at 90% 50%, var(--color-metal-dark) 0 4px, transparent 5px);
+}
+.sv-outline, .sv-art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.sv-art { filter: drop-shadow(0 calc(2px + var(--sh, 0) * 14px) calc(2px + var(--sh, 0) * 12px) var(--sv-lift-shadow)); }
+.sv-outline * { fill: var(--sv-paint); stroke: var(--sv-paint); stroke-width: 8; stroke-linejoin: round; stroke-linecap: round; }
+.sv-outline .sv-line { fill: none; stroke-width: calc(var(--w) + 8px); }
+.sv-art .sv-line { fill: none; stroke: var(--color-text); stroke-width: var(--w); stroke-linecap: round; }
+.sv-hose { --w: 6px; }
+.sv-handle { --w: 6px; }
+.sv-spout { --w: 7px; }
+.sv-thin { --w: 3px; }
+.sv-art .sv-thin { stroke: var(--color-metal-dark); }
+.sv-needle { --w: 4px; }
+.sv-art .sv-needle { stroke: var(--color-hot); }
+.sv-ink { fill: var(--color-text); }
+.sv-steel { fill: var(--color-metal); }
+.sv-face { fill: var(--color-surface); stroke: var(--color-metal-dark); stroke-width: 2; }
+.sv-accent { fill: var(--color-accent); stroke: var(--color-text); stroke-width: 2; }
+.sv-fluid { fill: var(--color-fluid); }
+.sv-lens { fill: var(--color-paint); }
+.sv-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; text-align: center; line-height: 1.3; }
+.sv-ticket { display: grid; gap: 10px; border-left: 4px solid var(--color-accent); padding: 22px 22px 18px; }
+.sv-body { display: grid; gap: 10px; }
+.sv-empty { margin: 0; color: var(--color-text-muted); }
+.sv-facts { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 14px; }
+.sv-facts dt, .sv-how { font-weight: 800; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent-text); padding-top: 0.2em; }
+.sv-facts dd { margin: 0; }
+.sv-how { margin: 4px 0 0; }
+.sv-steps { margin: 0; padding-left: 1.4em; display: grid; gap: 4px; }
+.sv-check { margin-top: 28px; display: grid; gap: 16px; padding: 26px 22px 20px; border-left: 4px solid var(--color-accent); }
+.sv-check-head { display: grid; gap: 6px; max-width: 62ch; }
+.sv-check-head p { margin: 0; color: var(--color-text-muted); }
+.sv-list { border: 0; margin: 0; padding: 0; min-width: 0; }
+.sv-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 8px 16px; }
+.sv-row {
+  display: flex; align-items: flex-start; gap: 12px; min-height: 44px; padding: 10px 12px; cursor: pointer;
+  background: var(--color-surface-2); border-radius: var(--radius-sm); transition: background var(--quick);
+}
+.sv-row:hover { background: var(--color-bg); }
+.sv-row input { flex: none; width: 24px; height: 24px; margin: 3px 0 0; accent-color: var(--color-accent-text); cursor: pointer; }
+.sv-letter {
+  flex: none; display: grid; place-items: center; width: 30px; height: 30px; border: 2px solid var(--color-text); border-radius: var(--radius-sm);
+  font: 900 italic 1rem/1 "Archivo"; font-stretch: 125%; transition: background var(--quick);
+}
+.sv-row input:checked + .sv-letter { background: var(--color-accent); }
+.sv-words { display: grid; gap: 2px; }
+.sv-words strong { font-weight: 800; }
+.sv-words small { font-size: 0.88rem; color: var(--color-text-muted); }
+.sv-count { margin: 0; font-weight: 700; min-height: 56px; display: flex; align-items: center; } /* room for the stamp beside it */
+.sv-stamp {
+  position: absolute; right: clamp(16px, 4vw, 44px); bottom: 30px; margin: 0; padding: 6px 14px; pointer-events: none; visibility: hidden;
+  border: 4px solid var(--sv-stamp); outline: 2px solid var(--sv-stamp); outline-offset: 3px; border-radius: var(--radius-sm);
+  color: var(--sv-stamp); font: 900 italic clamp(1.2rem, 2.4vw, 1.7rem)/1 "Archivo"; font-stretch: 125%; text-transform: uppercase;
+  mix-blend-mode: multiply; rotate: 0deg;
+}
+.sv-check.is-ready .sv-stamp { visibility: visible; }
+@media (max-width: 1000px) {
+  .sv-wall { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .sv-wall { border-width: 6px; margin-inline: -8px; }
+  .sv-tools { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .sv-ticket { padding: 18px 16px 14px; }
+  .sv-check { padding: 22px 16px 16px; }
+  .sv-count { min-height: 0; }
+  .sv-stamp { position: static; justify-self: center; margin: 4px 0 10px; }
+}
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Heritage */
+.heritage { position: relative; }
+.heritage-pin { min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; padding: calc(var(--header-h) + 24px) 0 32px; }
+.road { width: 100%; height: 100%; min-height: 240px; max-height: 50vh; align-self: center; overflow: visible; }
+@media (max-width: 760px) {
+  .heritage-pin { overflow: hidden; }
+  .motion .road { width: 260%; max-width: none; height: auto; max-height: none; aspect-ratio: 2 / 1; }
+}
+.road-base { fill: none; stroke: var(--color-asphalt); stroke-width: 54; stroke-linecap: round; }
+.road-line { fill: none; stroke: var(--color-paint); stroke-width: 4; stroke-linecap: round; }
+.road-mark circle { fill: var(--color-surface); stroke: var(--color-asphalt); stroke-width: 4; }
+.road-mark text { fill: var(--color-text); font: 900 italic 30px "Archivo"; font-stretch: 125%; }
+.milestones { list-style: none; margin: 0 auto; padding: 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+.milestone { border-left: 4px solid var(--color-accent); }
+.milestone b { font: 900 italic 2rem/1 "Archivo"; font-stretch: 125%; color: var(--color-accent-text); }
+.milestone h3 { margin: 6px 0 4px; font-size: 1.15rem; }
+.milestone p { margin: 0; color: var(--color-text-muted); max-width: 40ch; }
+/* With motion on, one milestone shows at a time, stacked in the same cell */
+.motion .milestones { grid-template-columns: minmax(0, 560px); }
+.motion .milestone { grid-area: 1 / 1; }
+
+/* Garage */
+.strip {
+  position: relative; height: 150px; border-radius: var(--radius-sm); border-bottom: 6px solid var(--color-asphalt);
+  background:
+    repeating-linear-gradient(90deg, var(--color-paint) 0 48px, transparent 48px 84px) 0 calc(100% - 16px) / 100% 6px no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 178px, var(--color-border) 178px 181px),
+    var(--concrete), var(--color-surface-2);
+  box-shadow: inset 0 0 0 1px var(--color-border);
+}
+.strip-bike { position: absolute; left: 0; bottom: -2px; width: 200px; cursor: grab; touch-action: pan-y; }
+.strip-bike:active { cursor: grabbing; }
+.speedo { margin: 18px 0 0; color: var(--color-text-muted); }
+.speedo b { font: 900 italic 2.4rem/1 "Archivo"; font-stretch: 125%; color: var(--color-text); font-variant-numeric: tabular-nums; }
+.speedo span { font-size: 0.85rem; }
+
+/* Crew form */
+.crew { background: var(--color-accent); color: var(--color-on-accent); }
+.crew .lede { color: var(--color-on-accent-muted); }
+.crew-grid { display: grid; gap: 40px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); align-items: end; }
+.crew h2 { margin-bottom: 18px; }
+.crew-form label { display: block; font-weight: 700; margin-bottom: 8px; }
+.crew-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.crew-row input {
+  flex: 1 1 220px; min-height: 52px; padding: 0 16px; border: 2px solid var(--color-on-accent); border-radius: 4px;
+  background: var(--color-surface); color: var(--color-text); font: inherit;
+}
+.crew-row input:focus-visible { outline-color: var(--color-on-accent); }
+.crew-row input[aria-invalid="true"] { border-color: var(--color-error-on-light); }
+.btn-go { background: var(--color-on-accent); color: var(--color-accent); overflow: hidden; position: relative; }
+.btn-go:hover { background: var(--black); }
+.go-bike { width: 52px; }
+.form-status { min-height: 1.6em; margin: 10px 0 0; font-weight: 600; }
+.spark { position: fixed; left: 0; top: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--color-on-accent); pointer-events: none; z-index: 70; }
+
+/* Footer */
+.site-footer { padding: 50px 0 40px; background: var(--color-surface); color: var(--color-text-muted); font-size: 0.85rem; }
+.footer-grid { display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: center; justify-content: space-between; }
+.disclaimer { max-width: 60ch; margin: 0; }
+.footer-year { margin: 0; }
+
+/* ---------- 3D modes: Showroom / Explore / Ride ---------- */
+.hero-title, .hero-sub { transition: opacity var(--standard) var(--ease), transform var(--standard) var(--ease), visibility 0s; }
+.hero:not([data-mode="showroom"]) .hero-title,
+.hero:not([data-mode="showroom"]) .hero-sub { opacity: 0; visibility: hidden; transform: translateY(-16px); transition-delay: 0s, 0s, var(--standard); }
+.model-status { margin: 10px 0 0; color: var(--color-text-muted); font-size: 0.85rem; min-height: 1.3em; }
+
+.modes-wrap { position: relative; z-index: 3; }
+.modes {
+  display: inline-flex; padding: 4px; gap: 4px; border: 1px solid var(--color-border); border-radius: var(--radius-full); background: var(--panel-bg);
+  transition: background-color 1s var(--ease), border-color 1s var(--ease); /* fades with the 3D day/night blend */
+}
+.mode {
+  min-height: 44px; padding: 0 18px; border: 0; border-radius: var(--radius-full); background: none; cursor: pointer;
+  font-weight: 800; font-style: italic; font-stretch: 125%; text-transform: uppercase; font-size: 0.8rem; color: var(--color-text-muted);
+  transition: background var(--quick), color var(--quick);
+}
+.mode:hover { color: var(--color-text); }
+.mode[aria-pressed="true"] { background: var(--btn-bg); color: var(--btn-fg); }
+
+.panel {
+  position: absolute; z-index: 3; background: var(--panel-bg); border: 1px solid var(--panel-border);
+  border-radius: var(--card-radius); padding: 18px;
+  transition: background-color 1s var(--ease), border-color 1s var(--ease);
+}
+.panel-explore {
+  top: calc(var(--header-h) + 24px); right: max(16px, (100% - 1200px) / 2);
+  width: min(360px, 100% - 32px); max-height: calc(100% - var(--header-h) - 130px); overflow: auto; overscroll-behavior: contain;
+  display: grid; gap: 14px; align-content: start;
+}
+.panel-tools { display: flex; gap: 8px; }
+.tool {
+  flex: 1; min-height: 44px; border: 1px solid var(--color-border); border-radius: var(--btn-radius); background: none; cursor: pointer;
+  font-weight: 800; font-style: italic; font-stretch: 125%; text-transform: uppercase; font-size: 0.8rem;
+  transition: background var(--quick), border-color var(--quick), color var(--quick);
+}
+.tool:hover { border-color: var(--color-accent); }
+.tool[aria-pressed="true"] { background: var(--btn-bg); border-color: var(--btn-bg); color: var(--btn-fg); }
+.part-card { border-left: 3px solid var(--color-accent); padding-left: 14px; }
+.part-card h2 { font-size: 1.3rem; line-height: 1.1; margin: 0 0 6px; }
+.part-card p { margin: 0; color: var(--color-text-muted); font-size: 0.95rem; }
+.parts { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.part-btn {
+  width: 100%; min-height: 44px; display: flex; align-items: center; gap: 10px; padding: 6px 10px; text-align: left;
+  border: 0; border-radius: var(--btn-radius); background: none; cursor: pointer; font-size: 0.92rem;
+  transition: background var(--quick);
+}
+.part-btn:hover { background: var(--color-surface-2); }
+.part-btn b, .hotspot { font-weight: 800; font-variant-numeric: tabular-nums; }
+.part-btn b {
+  display: grid; place-items: center; width: 26px; height: 26px; flex: none; border-radius: 50%;
+  border: 2px solid var(--hotspot-ring); font-size: 0.75rem;
+}
+.part-btn.is-active { background: var(--color-surface-2); }
+.part-btn.is-active b { background: var(--color-accent); color: var(--color-on-accent); }
+
+.hotspots { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.hotspot {
+  position: absolute; left: 0; top: 0; width: var(--hotspot-size); height: var(--hotspot-size);
+  margin: calc(var(--hotspot-size) / -2) 0 0 calc(var(--hotspot-size) / -2);
+  border-radius: 50%; border: 2px solid var(--hotspot-ring); background: var(--hotspot-bg); color: var(--color-text);
+  font-size: 0.8rem; cursor: pointer; pointer-events: auto; will-change: transform; /* moves every frame in explore */
+  transition: background var(--quick), color var(--quick);
+}
+.hotspot::before { content: ""; position: absolute; inset: -8px; border-radius: 50%; } /* bigger touch target */
+.hotspot:hover, .hotspot.is-active { background: var(--color-accent); color: var(--color-on-accent); }
+
+.panel-ride { bottom: 28px; right: max(16px, (100% - 1200px) / 2); display: grid; gap: 12px; width: min(440px, 100% - 32px); }
+.ride-help { margin: 0; color: var(--color-text-muted); font-size: 0.85rem; line-height: 2; }
+kbd {
+  display: inline-block; min-width: 1.8em; padding: 0 5px; text-align: center; font: 700 0.75rem/1.6 "Archivo", sans-serif;
+  border: 1px solid var(--color-border); border-bottom-width: 3px; border-radius: var(--radius-sm); color: var(--color-text);
+}
+.ride-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.ride-speed { margin: 0; color: var(--color-text-muted); font-size: 0.8rem; white-space: nowrap; }
+.ride-speed b { font: 900 italic 1.7rem/1 "Archivo"; font-stretch: 125%; color: var(--color-text); font-variant-numeric: tabular-nums; }
+
+/* HUD: tach arc (same drawing as the loader), gear digit, throttle/brake bars */
+.hud { display: grid; grid-template-columns: var(--hud-dial) auto; align-items: end; column-gap: 10px; row-gap: 2px; }
+.hud-dial { position: relative; width: var(--hud-dial); perspective: 200px; }
+.hud-tach { width: 100%; }
+.tach-fill { fill: none; stroke: var(--color-accent); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.hud-gear {
+  position: absolute; left: 50%; bottom: 0; translate: -50% 0; font: 900 italic 2.4rem/1 "Archivo"; font-stretch: 125%;
+  color: var(--color-text); font-variant-numeric: tabular-nums; transform-origin: 50% 60%; backface-visibility: hidden;
+}
+.hud-bars { display: flex; gap: 4px; height: calc(var(--hud-dial) * 0.5); }
+.hud-bar { width: 8px; height: 100%; background: var(--color-border); border-radius: 2px; overflow: hidden; display: flex; align-items: flex-end; }
+.hud-bar i { display: block; width: 100%; height: 100%; background: var(--color-accent); transform-origin: bottom; transform: scaleY(0); }
+.hud-bar.is-brake i { background: var(--color-danger); }
+.hud .ride-speed { grid-column: 1 / -1; }
+
+/* Coach: the "pit radio" tip card at the top of the screen */
+.ride-coach {
+  position: absolute; z-index: 3; top: calc(var(--header-h) + 14px); left: max(16px, (100% - 1200px) / 2);
+  width: min(440px, 100% - 32px); pointer-events: none;
+}
+.coach-card {
+  position: relative; overflow: hidden; visibility: hidden; pointer-events: auto;
+  background: var(--panel-bg); border: 1px solid var(--panel-border); border-left: 4px solid var(--color-accent);
+  border-radius: var(--btn-radius); padding: 12px 16px 14px;
+}
+.coach-card.is-on { visibility: visible; }
+.coach-label {
+  display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--color-accent);
+}
+.coach-label i { width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent); }
+.coach-card h2 { margin: 0 0 4px; font-size: 1.1rem; line-height: 1.2; }
+.coach-card p:not(.coach-label) { margin: 0; color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.45; }
+.coach-timer { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; }
+.coach-timer i { display: block; height: 100%; background: var(--color-accent); transform-origin: left; }
+
+/* Ride log: lessons learned so far */
+.ride-log-btn {
+  min-height: 44px; padding: 0 14px; border: 1px solid var(--color-border); border-radius: var(--btn-radius); background: none; cursor: pointer;
+  font-size: 0.85rem; color: var(--color-text-muted); text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.ride-log-btn::after { content: "+"; font-weight: 800; }
+.ride-log-btn[aria-expanded="true"]::after { content: "\2212"; }
+.ride-log-btn b { color: var(--color-text); font-variant-numeric: tabular-nums; margin-left: auto; }
+.ride-log { margin: 0; padding: 0 0 0 2em; display: grid; gap: 4px; font-size: 0.85rem; max-height: 30svh; overflow: auto; }
+.ride-log li { color: var(--color-text); }
+.ride-log li.is-locked { color: var(--color-text-muted); }
+.pad { display: grid; grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(2, 52px); gap: 6px; }
+.pad-btn {
+  border: 1px solid var(--color-border); border-radius: var(--btn-radius); background: var(--color-surface-2); cursor: pointer;
+  font-size: 1.3rem; touch-action: none; user-select: none; -webkit-user-select: none;
+  transition: background var(--quick), color var(--quick);
+}
+.pad-btn:active { background: var(--btn-bg); color: var(--btn-fg); }
+.pad-shift { font-size: 1.1rem; font-weight: 800; color: var(--color-text-muted); }
+@media (pointer: fine) and (min-width: 761px) { .pad { display: none; } }
+@media not ((pointer: fine) and (min-width: 761px)) { .ride-help { display: none; } } /* the pad replaces the key list */
+
+/* Ride is a night run: the hero swaps to the night tokens while the 3D scene fades to dark */
+.hero[data-mode="ride"] {
+  --color-bg: var(--color-night-bg);
+  --color-surface: var(--color-night-surface);
+  --color-surface-2: var(--color-night-surface-2);
+  --color-border: var(--color-night-border);
+  --color-text: var(--color-night-text);
+  --color-text-muted: var(--color-night-muted);
+  --color-accent-text: var(--color-accent);
+  --panel-bg: var(--panel-bg-night);
+  color: var(--color-text);
+  color-scheme: dark;
+}
+
+@media (max-width: 760px) {
+  .panel-explore { top: auto; left: 16px; right: 16px; width: auto; bottom: 96px; max-height: 44svh; }
+  .panel-ride { left: 16px; right: 16px; bottom: 96px; padding: 12px; gap: 10px; }
+  .panel-ride { --hud-dial: 96px; }
+  .hud-gear { font-size: 2rem; }
+}
+
+/* ---------- On the lift: step cards scroll past the sticky bike ---------- */
+.lift { position: relative; pointer-events: none; padding-bottom: 30svh; }
+.lift-head, .lift-card { pointer-events: auto; }
+.lift-head { max-width: 440px; margin-top: 20svh; display: grid; gap: 14px; }
+.lift-steps { list-style: none; margin: 0; padding: 0; }
+.lift-step { min-height: 100svh; display: flex; align-items: center; }
+.lift-card { width: min(420px, 100%); display: grid; gap: 10px; border-left: 4px solid var(--color-accent); padding: 22px 22px 18px; }
+.lift-count { justify-self: start; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.lift-card h3 { margin: 0; font-size: 1.45rem; font-weight: 900; font-style: italic; font-stretch: 125%; line-height: 1.05; text-transform: uppercase; }
+.lift-card p { margin: 0; color: var(--color-text-muted); }
+.lift-card .lift-tip { color: var(--color-text); font-size: 0.92rem; padding-top: 10px; border-top: 1px dashed var(--color-border); }
+.lift-tip b { color: var(--color-accent-text); margin-right: 6px; text-transform: uppercase; font-size: 0.78rem; letter-spacing: 0.06em; }
+/* Lift height gauge: fills as the bike goes up through the steps */
+.lift-rail {
+  position: fixed; right: max(16px, (100% - 1320px) / 2); top: 50%; translate: 0 -50%; z-index: 4;
+  display: grid; justify-items: center; gap: 10px; opacity: 0; visibility: hidden;
+  transition: opacity var(--standard) var(--ease), visibility 0s var(--standard);
+}
+.lift-rail.is-on { opacity: 1; visibility: visible; transition-delay: 0s; }
+.lift-rail span { writing-mode: vertical-rl; rotate: 180deg; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted); }
+.lift-gauge {
+  width: 10px; height: 40vh; border: 1px solid var(--color-text-muted); border-radius: var(--radius-sm); overflow: hidden;
+  background: repeating-linear-gradient(0deg, transparent 0 calc(12.5% - 1px), var(--color-border) calc(12.5% - 1px) 12.5%), var(--color-surface);
+}
+.lift-gauge i { display: block; height: 100%; background: var(--hazard); transform-origin: bottom; transform: scaleY(var(--lift, 0)); }
+@media (max-width: 760px) {
+  .lift-head { margin-top: 12svh; }
+  /* Phone: each card sticks to the bottom like a sheet while its step is on screen */
+  .lift-step { align-items: flex-end; padding-bottom: 16px; }
+  .lift-card { width: 100%; position: sticky; bottom: 16px; padding: 18px 16px 14px; }
+  .lift-card h3 { font-size: 1.2rem; }
+  .lift-card p { font-size: 0.95rem; line-height: 1.5; }
+  /* Phone: the gauge lies flat under the header */
+  .lift-rail { left: 16px; right: 16px; top: calc(var(--header-h) + 10px); translate: none; }
+  .lift-rail span { display: none; }
+  .lift-gauge {
+    width: 100%; height: 8px;
+    background: repeating-linear-gradient(90deg, transparent 0 calc(12.5% - 1px), var(--color-border) calc(12.5% - 1px) 12.5%), var(--color-surface);
+  }
+  .lift-gauge i { transform-origin: left; transform: scaleX(var(--lift, 0)); }
+}
+
+.model-credit { margin: 0; max-width: 60ch; }
+.model-credit a { color: var(--color-accent-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; }
+}

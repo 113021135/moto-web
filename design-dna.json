@@ -1,0 +1,119 @@
+{
+  "_note": "Design DNA for KESTREL moto garage, a made-up motorcycle brand (student project).",
+  "thesis": {
+    "visual": "Daylight workshop: a garage bay on a sunny afternoon. Concrete floor, paper, masking tape, hazard stripes, painted bay lines and dealer hang tags; ink type. Colourful: every section has its own loud accent (orange hero/workbench/crew, blue lift, pink lineup and marquee, teal service, violet heritage, yellow garage) for fills and buttons, with a dark shade of the same hue for text. Wide italic display type that leans forward like a rider in a tuck. Ride mode is the night run: dark paddock with a cyan neon grid.",
+    "interaction": "Throttle feel. Things are still, then snap forward fast and settle (expo out, small overshoot). The visitor drives the motion: drag, hold, throw, scroll. Only the backdrop idles (drifting light shafts and dust); content never loops for decoration except the speed marquee, whose speed is set by scroll velocity.",
+    "allowed_patterns": [
+      "lineup grid of model cards (one per model family, filtered)",
+      "scrolling marquee of model family names (speed tied to scroll velocity)",
+      "bike silhouette riding the scroll progress bar",
+      "custom wheel cursor on fine pointers",
+      "intro loader styled as a tachometer",
+      "bloom glow on the 3D headlight and taillight only",
+      "CSS-only textures: concrete noise (SVG feTurbulence), pegboard holes, masking tape labels, perforated service tickets, hazard stripe dividers",
+      "lively backdrop: slow light shafts, roller-door light band and tyre tracks tied to scroll, ~60 dust motes (paused off screen, when hidden, and static under reduced motion)",
+      "3D bay: concrete ground with painted yellow bay lines and a soft shadow; Ride fades the scene to night",
+      "one accent per section, set by overriding --color-accent* on the section"
+    ],
+    "forbidden": [
+      "gradient text",
+      "glassmorphism panels",
+      "decorative blobs",
+      "perpetual idle animation on content (the background layer is the only exception)",
+      "invented specs (horsepower, prices, top speeds)"
+    ]
+  },
+  "design_system": {
+    "color": {
+      "concrete": "#e9e5dc",
+      "paper": "#f8f5ef",
+      "paper_2": "#efeae0",
+      "line": "#cfc8b9",
+      "ink": "#1c1e19",
+      "muted": "#595d52",
+      "asphalt": "#34362f",
+      "steel": "#8b9096",
+      "tape": "rgba(241,220,154,0.9)",
+      "floor_paint": "#f2c230",
+      "accent": {
+        "hex": "#ff6b1a",
+        "hi": "#ff8a45",
+        "text_on_light": "#b23f00",
+        "on_accent_muted": "#3f1800",
+        "usage": "default accent (hero, workbench, crew): fills, buttons, active states (ink text on it); dark shade for text, links, focus rings"
+      },
+      "signal_red": "#ff3b30",
+      "night": {
+        "ink": "#0b0c0a",
+        "ink_2": "#14160f",
+        "ink_3": "#1d2017",
+        "line": "#2a2e22",
+        "paper": "#f1f4ea",
+        "muted": "#a3aa97",
+        "usage": "Ride mode panels and 3D scene; cyan #2fd4ff grid and part glow, pink #ff4f9a rim light"
+      },
+      "section_accents": {
+        "lift": {
+          "fill": "#2f8cff",
+          "hi": "#5aa5ff",
+          "text": "#1556b8"
+        },
+        "lineup_marquee": {
+          "fill": "#ff4f9a",
+          "hi": "#ff78b3",
+          "text": "#b8135e"
+        },
+        "service": {
+          "fill": "#14c2a8",
+          "hi": "#3fd9c1",
+          "text": "#00715f"
+        },
+        "heritage": {
+          "fill": "#a07aff",
+          "hi": "#b896ff",
+          "text": "#5b2fd1"
+        },
+        "garage": {
+          "fill": "#ffc21a",
+          "hi": "#ffd34d",
+          "text": "#855700"
+        },
+        "rule": "ink on every fill >= 5:1; every text shade >= 4.5:1 on concrete and paper"
+      }
+    },
+    "typography": {
+      "family": "Archivo (variable: wdth 62-125, wght 100-900)",
+      "display": "Archivo 900 italic, font-stretch 125%, uppercase, tight leading 0.9",
+      "body": "Archivo 400, 100% width, 1.6 line height",
+      "scale": "clamp-based: h1 clamp(3rem, 11vw, 9.5rem); h2 clamp(2.2rem, 6vw, 4.8rem)"
+    },
+    "spacing": {
+      "density": "airy sections, tight clusters",
+      "section_padding": "clamp(5rem, 12vw, 9rem)",
+      "gutter": "16px min"
+    },
+    "shape": {
+      "radius": "4px controls, 18px cards, 999px chips",
+      "slant": "skewX(-8deg) on chips and buttons"
+    },
+    "motion": {
+      "personality": "Energetic",
+      "signature_ease": "CustomEase 'throttle' = cubic-bezier(0.75, 0, 0.15, 1)",
+      "entrance": "expo.out",
+      "pop": "back.out(1.7)",
+      "durations": {
+        "quick": 0.18,
+        "standard": 0.45,
+        "slow": 0.9
+      },
+      "stagger": "0.04-0.08, total under 0.5s",
+      "reduced_motion": "gsap.matchMedia: no pins, no scrub, no loader sweep, static 3D"
+    }
+  },
+  "visual_effects": {
+    "webgl": "Three.js r160 procedural sport bike: PBR clearcoat paint, RoomEnvironment reflections, UnrealBloom on lights, custom shader ground (day: concrete bay with painted lines, night: scrolling cyan neon grid), day/night palette blend on Ride, exhaust particles, wheelie keyframe clip.",
+    "scroll": "ScrollTrigger: pinned heritage road (DrawSVG + MotionPath rider), velocity-driven marquee, progress-bar rider.",
+    "interaction": "OrbitControls drag, hold-to-rev with Web Audio engine note, raycast click for wheelie, Draggable + Inertia throwable bike, Flip filtering, ScrambleText titles.",
+    "performance_tier": "medium: one WebGL canvas, rendering paused when off screen"
+  }
+}
