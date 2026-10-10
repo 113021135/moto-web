@@ -1,5 +1,10 @@
 # moto-web: KESTREL moto garage
 
+[![Live demo](https://img.shields.io/badge/Live_demo-open_the_site-ff6a13?style=for-the-badge)](https://113021135.github.io/moto-web/)
+[![Use this template](https://img.shields.io/badge/Use_this-template-2f6fde?style=for-the-badge&logo=github)](https://github.com/113021135/moto-web/generate)
+
+![KESTREL hero: the 3D K6 sport bike in the showroom](docs/screenshots/hero.png)
+
 Welcome to the KESTREL moto web. It's an interactive, playful website for **KESTREL**, a made-up motorcycle brand.
 You can spin and rev a 3D bike, open it up to see how its parts work, ride it on a neon grid, and learn basic bike
 care in a cartoon workshop.
@@ -23,6 +28,23 @@ JavaScript, with no build step and no npm.
 | Crew | Newsletter form. Demo mode until you connect a form service (see below). |
 
 Each section has its own accent colour (orange, blue, pink, teal, violet, yellow).
+
+| On the lift | Lineup |
+|---|---|
+| ![Lift tour, step 8: the chain](docs/screenshots/lift.png) | ![Lineup cards](docs/screenshots/lineup.png) |
+
+## Use it as a template
+
+1. Click **Use this template** (top of this page) > **Create a new repository**.
+2. Make your site your own:
+   - **Text, bikes, parts, tips:** `js/data.js` (all content lives here).
+   - **Colours and fonts:** tokens at the top of `css/styles.css`.
+   - **Brand name and logo text:** `index.html` (header, title, footer).
+   - **3D model (optional):** see [Adding a real 3D model](#adding-a-real-3d-model-optional).
+3. Run it locally (see [Run it](#run-it)) and check it in the browser.
+4. Put it online for free: in your new repo, open **Settings > Pages**, set **Source** to
+   *Deploy from a branch*, choose `main` and `/ (root)`, then save. After a minute it's live at
+   `https://<your-username>.github.io/<repo-name>/`.
 
 ## Run it
 
